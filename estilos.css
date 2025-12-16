@@ -1,86 +1,110 @@
+:root {
+    --color-fondo: #ee416c;
+    --color-disponible: #b62247;
+    --color-aprobado: #9f0a2f;
+    --color-no-disponible: #d22d56;
+    --color-texto: #f5f5f5; /* Blanco/gris claro para texto */
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
-  margin: 0;
-  padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
 h1 {
-  text-align: center;
-  color: #800020;
+    color: var(--color-disponible);
 }
 
-.malla {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 260px;
-  gap: 20px;
-  overflow-x: auto;
-  padding: 20px;
+#malla-curricular {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
 
 .semestre {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.05); /* Fondo ligeramente transparente */
+    border-radius: 8px;
+    padding: 15px;
+    width: 280px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .semestre h2 {
-  text-align: center;
-  color: #800020;
+    text-align: center;
+    border-bottom: 2px solid var(--color-disponible);
+    padding-bottom: 10px;
+    margin-top: 0;
+    color: var(--color-texto);
 }
 
-.ramo {
-  margin: 8px 0;
-  padding: 10px;
-  color: white;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
+.cursos-lista {
+    list-style: none;
+    padding: 0;
 }
 
-.ramo:hover {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-.ramo.aprobado {
-  text-decoration: line-through;
-  opacity: 0.4;
-}
-
-.ramo.disponible {
-  outline: 3px solid #000;
-  opacity: 1;
-}
-.ramo {
-  margin: 8px 0;
-  padding: 10px;
-  color: white;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
+/* Estilos de los Cursos (ramos) */
+.curso {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, text-decoration 0.3s, opacity 0.3s;
+    font-size: 0.95em;
+    line-height: 1.2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Ramo con prerrequisitos (inicial) */
-.ramo.con-prereq {
-  background-color: #9f0a2f;
-  opacity: 0.4;
+.curso-nombre {
+    flex-grow: 1;
 }
 
-
-/* Ramo aprobado */
-.ramo.aprobado {
-  background-color: #9f0a2f;
-  text-decoration: line-through;
-  opacity: 1;
+.curso-creditos {
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* Ramo disponible */
-.ramo.disponible {
-  background-color: #b62247;
-  outline: 3px solid #800020;
+/* 1. Curso Disponible (Color Principal) */
+.disponible {
+    background-color: var(--color-disponible);
+    color: var(--color-texto);
+    opacity: 1;
 }
 
+.disponible:hover {
+    box-shadow: 0 0 10px var(--color-disponible);
+}
+
+/* 2. Curso Aprobado (Listo) */
+.aprobado {
+    background-color: var(--color-aprobado);
+    text-decoration: line-through;
+    color: var(--color-texto);
+    opacity: 1;
+}
+
+.aprobado:hover {
+    box-shadow: 0 0 10px var(--color-aprobado);
+}
+
+/* 3. Curso No Disponible (Prerrequisitos pendientes) */
+.no-disponible {
+    background-color: var(--color-no-disponible);
+    opacity: 0.5; /* Baja opacidad */
+    cursor: default;
+    color: rgba(255, 255, 255, 0.8);
+}
