@@ -6,6 +6,17 @@ const colores = [
   "#ee416c"
 ];
 
+// 👉 PRERREQUISITOS
+const prerequisitos = {
+  "Matemática II": ["Matemáticas"],
+  "Física II": ["Física", "Matemáticas"],
+  "Fisiología General": ["Física", "Química General y Orgánica"],
+  "Bioquímica": ["Química General y Orgánica"],
+  "Bioquímica Aplicada": ["Bioquímica"],
+  "Fisiología de Sistemas": ["Fisiología General"],
+  "Inmunología": ["Genética", "Bioquímica"]
+};
+
 const semestres = [
   {
     nombre: "1° semestre",
@@ -41,22 +52,13 @@ const semestres = [
       "Inglés I",
       "Bioquímica Aplicada"
     ]
-  },
-  {
-    nombre: "4° semestre",
-    ramos: [
-      "Profesión, Persona y Sociedad",
-      "Tecnologías Moleculares Aplicadas al Diagnóstico",
-      "Introducción a la Salud Pública",
-      "Fisiopatología",
-      "Farmacología",
-      "Inglés II"
-    ]
   }
 ];
 
 const contenedor = document.getElementById("malla");
+const estado = {}; // aprobado o no
 
+// Crear malla
 semestres.forEach(semestre => {
   const divSemestre = document.createElement("div");
   divSemestre.className = "semestre";
@@ -70,8 +72,35 @@ semestres.forEach(semestre => {
     divRamo.className = "ramo";
     divRamo.textContent = ramo;
     divRamo.style.backgroundColor = colores[i % colores.length];
+    divRamo.dataset.nombre = ramo;
+
+    divRamo.addEventListener("click", () => aprobarRamo(ramo));
+
     divSemestre.appendChild(divRamo);
   });
 
   contenedor.appendChild(divSemestre);
 });
+
+function aprobarRamo(ramo) {
+  estado[ramo] = true;
+
+  document.querySelectorAll(".ramo").forEach(r => {
+    r.classList.remove("disponible");
+
+    if (estado[r.dataset.nombre]) {
+      r.classList.add("aprobado");
+    }
+  });
+
+  // Iluminar ramos disponibles
+  Object.entries(prerequisitos).forEach(([ramoDestino, reqs]) => {
+    const cumplidos = reqs.every(r => estado[r]);
+    if (cumplidos && !estado[ramoDestino]) {
+      const elem = document.querySelector(
+        `.ramo[data-nombre="${ramoDestino}"]`
+      );
+      if (elem) elem.classList.add("disponible");
+    }
+  });
+}
