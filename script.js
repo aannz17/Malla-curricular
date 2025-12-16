@@ -1,12 +1,3 @@
-const colores = [
-  "#800020",
-  "#9f0a2f",
-  "#b62247",
-  "#d22d56",
-  "#ee416c"
-];
-
-// 👉 PRERREQUISITOS
 const prerequisitos = {
   "Matemática II": ["Matemáticas"],
   "Física II": ["Física", "Matemáticas"],
@@ -56,7 +47,7 @@ const semestres = [
 ];
 
 const contenedor = document.getElementById("malla");
-const estado = {}; // aprobado o no
+const estado = {}; // true = aprobado
 
 // Crear malla
 semestres.forEach(semestre => {
@@ -67,14 +58,17 @@ semestres.forEach(semestre => {
   titulo.textContent = semestre.nombre;
   divSemestre.appendChild(titulo);
 
-  semestre.ramos.forEach((ramo, i) => {
+  semestre.ramos.forEach(ramo => {
     const divRamo = document.createElement("div");
     divRamo.className = "ramo";
     divRamo.textContent = ramo;
-    divRamo.style.backgroundColor = colores[i % colores.length];
     divRamo.dataset.nombre = ramo;
 
-    divRamo.addEventListener("click", () => aprobarRamo(ramo));
+    if (prerequisitos[ramo]) {
+      divRamo.classList.add("con-prereq");
+    }
+
+    divRamo.addEventListener("click", () => toggleRamo(ramo));
 
     divSemestre.appendChild(divRamo);
   });
@@ -82,24 +76,31 @@ semestres.forEach(semestre => {
   contenedor.appendChild(divSemestre);
 });
 
-function aprobarRamo(ramo) {
-  estado[ramo] = true;
+function toggleRamo(ramo) {
+  // doble click → volver a estado original
+  estado[ramo] = !estado[ramo];
 
   document.querySelectorAll(".ramo").forEach(r => {
-    r.classList.remove("disponible");
+    r.classList.remove("aprobado", "disponible");
 
-    if (estado[r.dataset.nombre]) {
-      r.classList.add("aprobado");
+    if (prerequisitos[r.dataset.nombre]) {
+      r.classList.add("con-prereq");
     }
   });
 
-  // Iluminar ramos disponibles
-  Object.entries(prerequisitos).forEach(([ramoDestino, reqs]) => {
+  // marcar aprobados
+  Object.entries(estado).forEach(([r, aprobado]) => {
+    if (aprobado) {
+      const elem = document.querySelector(`.ramo[data-nombre="${r}"]`);
+      if (elem) elem.classList.add("aprobado");
+    }
+  });
+
+  // marcar disponibles
+  Object.entries(prerequisitos).forEach(([destino, reqs]) => {
     const cumplidos = reqs.every(r => estado[r]);
-    if (cumplidos && !estado[ramoDestino]) {
-      const elem = document.querySelector(
-        `.ramo[data-nombre="${ramoDestino}"]`
-      );
+    if (cumplidos && !estado[destino]) {
+      const elem = document.querySelector(`.ramo[data-nombre="${destino}"]`);
       if (elem) elem.classList.add("disponible");
     }
   });
