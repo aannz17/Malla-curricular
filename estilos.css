@@ -1,15 +1,18 @@
 :root {
-    --color-fondo: #ee416c;
+    --color-fondo: #FFFFFF; /* Fondo Blanco */
+    --color-texto-oscuro: #333; /* Texto oscuro para el cuerpo */
+    --color-texto-claro: #f5f5f5; /* Texto claro para los bloques de curso */
+    
+    /* Colores de los ramos (mantienen los valores originales) */
     --color-disponible: #b62247;
     --color-aprobado: #9f0a2f;
     --color-no-disponible: #d22d56;
-    --color-texto: #f5f5f5; /* Blanco/gris claro para texto */
 }
 
 body {
     font-family: Arial, sans-serif;
     background-color: var(--color-fondo);
-    color: var(--color-texto);
+    color: var(--color-texto-oscuro); /* Texto del cuerpo oscuro */
     margin: 0;
     padding: 20px;
 }
@@ -20,7 +23,12 @@ header {
 }
 
 h1 {
-    color: var(--color-disponible);
+    /* Mantiene el color original del título principal */
+    color: var(--color-disponible); 
+}
+
+header p {
+    color: var(--color-texto-oscuro); /* Asegura que el texto del encabezado se vea */
 }
 
 #malla-curricular {
@@ -31,11 +39,11 @@ h1 {
 }
 
 .semestre {
-    background-color: rgba(255, 255, 255, 0.05); /* Fondo ligeramente transparente */
+    background-color: #f0f0f0; /* Un gris muy claro para diferenciar el bloque del fondo */
     border-radius: 8px;
     padding: 15px;
     width: 280px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra más suave para fondo claro */
 }
 
 .semestre h2 {
@@ -43,7 +51,7 @@ h1 {
     border-bottom: 2px solid var(--color-disponible);
     padding-bottom: 10px;
     margin-top: 0;
-    color: var(--color-texto);
+    color: var(--color-texto-oscuro); /* Título del semestre oscuro */
 }
 
 .cursos-lista {
@@ -78,10 +86,10 @@ h1 {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* 1. Curso Disponible (Color Principal) */
+/* 1. Curso Disponible */
 .disponible {
     background-color: var(--color-disponible);
-    color: var(--color-texto);
+    color: var(--color-texto-claro); /* Letras blancas para los ramos */
     opacity: 1;
 }
 
@@ -93,7 +101,7 @@ h1 {
 .aprobado {
     background-color: var(--color-aprobado);
     text-decoration: line-through;
-    color: var(--color-texto);
+    color: var(--color-texto-claro); /* Letras blancas para los ramos */
     opacity: 1;
 }
 
@@ -101,10 +109,10 @@ h1 {
     box-shadow: 0 0 10px var(--color-aprobado);
 }
 
-/* 3. Curso No Disponible (Prerrequisitos pendientes) */
+/* 3. Curso No Disponible */
 .no-disponible {
     background-color: var(--color-no-disponible);
-    opacity: 0.5; /* Baja opacidad */
+    opacity: 0.5;
     cursor: default;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--color-texto-claro); /* Letras blancas con menor opacidad */
 }
