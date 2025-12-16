@@ -54,3 +54,31 @@ h1 {
   outline: 3px solid #000;
   opacity: 1;
 }
+.ramo {
+  margin: 8px 0;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Ramo con prerrequisitos (inicial) */
+.ramo.con-prereq {
+  background-color: rgba(159, 10, 47, 0.4); /* #9f0a2f transparente */
+}
+
+/* Ramo aprobado */
+.ramo.aprobado {
+  background-color: #9f0a2f;
+  text-decoration: line-through;
+  opacity: 1;
+}
+
+/* Ramo disponible */
+.ramo.disponible {
+  background-color: #b62247;
+  outline: 3px solid #800020;
+}
+
