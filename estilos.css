@@ -66,8 +66,10 @@ h1 {
 
 /* Ramo con prerrequisitos (inicial) */
 .ramo.con-prereq {
-  background-color: rgba(159, 10, 47, 0.4); /* #9f0a2f transparente */
+  background-color: #9f0a2f;
+  opacity: 0.4;
 }
+
 
 /* Ramo aprobado */
 .ramo.aprobado {
