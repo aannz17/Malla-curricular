@@ -109,9 +109,6 @@ const prerrequisitos = {
     'integracion-bioanalisis': ['quimica-clinica', 'hematologia', 'parasitologia', 'microbiologia-clinica'],
     'gestion-2': ['gestion-1'],
     'proyecto-inv': ['metodologias-inv'],
-    // Asumo que los ramos con ID '...-9' y '...-10' son el mismo, pero al estar en semestres distintos (9no y 10mo)
-    // y tener los mismos nombres, usaré los mismos prerrequisitos para ambos.
-    // Solo me basaré en los prerrequisitos listados en el documento, asumiendo que para 9no/10mo se necesitan los mismos.
     'practica-prof-9': ['aseguramiento-calidad', 'medicina-transfusional', 'integracion-bioanalisis', 'gestion-2', 'proyecto-inv'],
     'practica-prof-10': ['aseguramiento-calidad', 'medicina-transfusional', 'integracion-bioanalisis', 'gestion-2', 'proyecto-inv'],
     'gestion-calidad-9': ['gestion-2'],
@@ -121,52 +118,52 @@ const prerrequisitos = {
 };
 
 // Estado de los cursos: 'aprobado' o 'pendiente'
-// Se usará localStorage para guardar el estado entre sesiones.
 let estadoCursos = JSON.parse(localStorage.getItem('mallaEstado')) || {};
 
 
 // --- 2. Funciones de Lógica ---
 
-/**
- * Verifica si un curso tiene todos sus prerrequisitos aprobados.
- * @param {string} cursoId - ID del curso a verificar.
- * @returns {boolean} - true si está disponible, false si no.
- */
 function estaDisponible(cursoId) {
-    // Si el curso no tiene prerrequisitos, está disponible por defecto.
     const prereqs = prerrequisitos[cursoId];
     if (!prereqs || prereqs.length === 0) {
         return true;
     }
-
-    // Verifica que TODOS los prerrequisitos estén aprobados.
     return prereqs.every(prereqId => estadoCursos[prereqId] === 'aprobado');
 }
 
-/**
- * Actualiza el estado de un curso (aprobado/pendiente).
- * @param {string} cursoId - ID del curso.
- * @param {string} estado - 'aprobado' o 'pendiente'.
- */
 function actualizarEstado(cursoId, estado) {
     if (estado === 'aprobado') {
         estadoCursos[cursoId] = 'aprobado';
     } else {
-        delete estadoCursos[cursoId]; // Se asume 'pendiente' si no está en la lista.
+        delete estadoCursos[cursoId];
     }
     localStorage.setItem('mallaEstado', JSON.stringify(estadoCursos));
     renderizarMalla();
 }
 
+/**
+ * NUEVA FUNCIÓN: Maneja el clic único para cambiar de estado (Disponible -> Aprobado o Aprobado -> Pendiente).
+ */
+function manejarClickCurso(cursoId, elementoCurso) {
+    const aprobado = estadoCursos[cursoId] === 'aprobado';
+    const disponible = estaDisponible(cursoId);
+
+    if (aprobado) {
+        // Si ya está APROBADO (listo), lo revierte a PENDIENTE
+        actualizarEstado(cursoId, 'pendiente');
+    } else if (disponible) {
+        // Si está DISPONIBLE, lo marca como APROBADO (listo)
+        actualizarEstado(cursoId, 'aprobado');
+    }
+    // Si no está disponible (no-disponible), no hace nada.
+}
+
 
 // --- 3. Funciones de Renderizado e Interacción ---
 
-/**
- * Renderiza la malla completa, actualizando clases CSS según la disponibilidad/aprobación.
- */
 function renderizarMalla() {
     const contenedorMalla = document.getElementById('malla-curricular');
-    contenedorMalla.innerHTML = ''; // Limpiar el contenido anterior
+    contenedorMalla.innerHTML = '';
 
     malla.forEach(semestreData => {
         const semestreDiv = document.createElement('div');
@@ -191,7 +188,6 @@ function renderizarMalla() {
             li.appendChild(nombreSpan);
             li.appendChild(creditosSpan);
 
-            // Determinar la clase CSS (disponible, aprobado, no-disponible)
             const aprobado = estadoCursos[curso.id] === 'aprobado';
             const disponible = estaDisponible(curso.id);
 
@@ -201,23 +197,19 @@ function renderizarMalla() {
                 li.classList.add('aprobado');
             } else if (disponible) {
                 li.classList.add('disponible');
-                // Asignar el evento de click solo a los cursos disponibles
-                li.addEventListener('click', () => {
-                    // Solo marcar como aprobado si está disponible (no aprobado)
-                    if (li.classList.contains('disponible')) {
-                        actualizarEstado(curso.id, 'aprobado');
-                    }
-                });
             } else {
                 li.classList.add('no-disponible');
             }
 
-            // Asignar evento de doble click para deshacer la aprobación
-            if (aprobado) {
-                li.addEventListener('dblclick', () => {
-                    actualizarEstado(curso.id, 'pendiente');
-                });
-            }
+            // Asignar el evento de click (tanto para aprobar como para desaprobar)
+            // Se asigna a todos los cursos para que los aprobados también puedan revertirse.
+            li.addEventListener('click', () => {
+                manejarClickCurso(curso.id, li);
+            });
+            
+            // Eliminar listeners de doble click si existieran de versiones anteriores
+            li.removeEventListener('dblclick', () => {});
+
 
             cursosLista.appendChild(li);
         });
