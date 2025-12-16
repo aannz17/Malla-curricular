@@ -45,3 +45,12 @@ h1 {
   transform: scale(1.05);
   opacity: 0.85;
 }
+.ramo.aprobado {
+  text-decoration: line-through;
+  opacity: 0.4;
+}
+
+.ramo.disponible {
+  outline: 3px solid #000;
+  opacity: 1;
+}
